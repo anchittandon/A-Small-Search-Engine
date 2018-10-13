@@ -19,6 +19,6 @@ public class Position {
 	}
 
 	int getWordIndex(){
-		return wordposition
+		return wordposition;
 	}
 }
