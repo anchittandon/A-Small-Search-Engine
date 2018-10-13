@@ -4,7 +4,7 @@ interface PositionInterface{
 	int getWordIndex();
 }
 
-public class Position {
+public class Position implements PositionInterface {
 	
 	PageEntry page;
 	int wordposition;
