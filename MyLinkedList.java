@@ -1,18 +1,25 @@
 interface MyLinkedListInterface<T>{
-	public int getSize()
-	public Boolean isEmpty()
-	public void add(T data)
-	public T remove()
-	public String toString()
+	public int getSize();
+	public Boolean isEmpty();
+	public void add(T data);
+	public T remove();
+	public String toString();
 }
 
 public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 	/*
-	 *Implements Linked List with Node class
-	 *remove() removes the first element
-	 *add() inserts from the front of the linked list
+	 Implements Linked List with Node class
+	 - remove() removes the first element
+	 - add() inserts from the front of the linked list
+	 - find() searches for the node containing a data mentioned in searchquery
 	*/
 	class Node {
+		/*
+			Implements a Node of MyLinkedList
+			- getData() returns the data stored
+			- getNext() returns the reference of next Node in the MyLinkedList
+			- setNext() sets the reference of next Node in the MyLinkedList
+		*/
 		T data;
 		Node next;
 		Node(T d){
@@ -33,13 +40,17 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 	Node head;
 	int size;
 
-	MyLinkedList(){
+	public MyLinkedList(){
 		head = null;
 		size = 0;
 	}
 
 	public int getSize(){
 		return size;
+	}
+
+	public Node getHead(){
+		return head;
 	}
 
 	public Boolean isEmpty(){
@@ -65,14 +76,23 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 		return returnNode;
 	}
 
+	public Node find(T obj){
+        Node itr = getHead();
+        while(itr != null && !obj.equals(itr.getData())){
+            itr = itr.getNext();
+        }
+        return itr;
+    }
+
 	public String toString(){
+		// For printing out the elements of MyLinkedList
         String linkedListString= "";
         String dataString = "";
         Node itr = head;
         while(itr != null){
             dataString = itr.data.toString();
             if(dataString.equals("") == false){
-                linkedListString = dataString+", "+linkedListString;
+                linkedListString = linkedListString+", "+dataString;
             }
             itr = itr.next;
         }
@@ -80,7 +100,7 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             return linkedListString;
         }
         else{
-            return linkedListString.substring(0,linkedListString.length()-2);
+            return linkedListString.substring(2,linkedListString.length());
         }
     }
 }
