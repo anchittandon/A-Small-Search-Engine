@@ -97,7 +97,7 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
             if(dataString.equals("") == false){
                 linkedListString = linkedListString+", "+dataString;
             }
-            itr = itr.getData();
+            itr = itr.getNext();
         }
         if(linkedListString.equals("") == true){
             return linkedListString;
