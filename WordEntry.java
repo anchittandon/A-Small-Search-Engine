@@ -1,31 +1,55 @@
 interface WordEntryInterface{
-	WordEntry(String word);
-	void addPosition(Position position);
-	void addPositions(MyLinkedList<Position> positions);
-	MyLinkedList<Position> getAllPositionsForThisWord();
-	float getTermFrequency(String word);
+	public void addPosition(Position position);
+	public void addPositions(MyLinkedList<Position> positions);
+	public MyLinkedList<Position> getAllPositionsForThisWord();
+	public float getTermFrequency(String word);
 }
 
 public class WordEntry{
+
+	/*
+		Stores the list of word indices 
+		where the word is present in the document(s).
+	*/
+
 	String word;
 	Myset<Position> positions;
-	WordEntry(String word){
+
+	public WordEntry(String word){
 		this.word = word;
 		this.positions = new Myset<Position>();
 	}
 
-	void addPosition(Position position){
+	public void addPosition(Position position){
+	// Add a position entry for word.
 		this.positions.Insert(position);
 	} 
-	void addPositions(MyLinkedList<Position> ps){
-		this.positions.Union(ps);
+
+	public void addPositions(MyLinkedList<Position> ps){
+	// Add multiple position entries for word.
+		Myset<Position> newpositions = new Myset<Position>();
+		newpositions.myset = ps;
+		this.positions = this.positions.Union(newpositions);
 	}
 
-	MyLinkedList<Position> getAllPositionsForThisWord(){
+	public MyLinkedList<Position> getAllPositionsForThisWord(){
+	// Returns a linked list of all position entries for the word.
 		return positions.myset;
 	}
 
-	float getTermFrequency(String word){
-
+	public float getTermFrequency(String word){
+	// To be implemented
+	// Return the term frequency of the word in a webpage
+		return 0.0f;
 	}
+
+	public boolean equals(Object obj){
+	// Two WordEntry Objects are equal if they are
+	// entries of same word
+        return this.word.equals(((WordEntry)obj).word);
+    }
+
+    public String toString(){
+        return word;
+    } 
 }
