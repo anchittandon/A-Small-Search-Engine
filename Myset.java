@@ -12,7 +12,7 @@ public class Myset<T> implements MysetInterface<T>{
 
 	MyLinkedList<T> myset;
 
-	Myset(){
+	public Myset(){
 		myset = new MyLinkedList<T>();
 	}
 	public Boolean IsEmpty(){
@@ -93,8 +93,10 @@ public class Myset<T> implements MysetInterface<T>{
 		return answer;
 	}
 
-	public MyLinkedList<T>.Node find(T a){
-		MyLinkedList<T>.Node result = this.myset.find(a);
+	public MyLinkedList<T>.Node find(T data){
+		// Calls the find() method of MyLinkedList
+		// If not found, returns null
+		MyLinkedList<T>.Node result = this.myset.find(data);
 		return result;
 	}
 	public String toString(){
