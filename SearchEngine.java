@@ -132,7 +132,7 @@ public class SearchEngine implements SearchEngineInterface{
         Prints the name of the webpages which contain the word. 
         The list of webpage names are comma separated. 
         If the word is not found in any webpage, then prints 
-        “No webpage contains word x”
+        "No webpage contains word"
     */
    
     	word = word.toLowerCase();
@@ -154,8 +154,8 @@ public class SearchEngine implements SearchEngineInterface{
     /*
         Prints the word indices where the word is found in the document with name pageName.
         The word indices should be separated by a comma. 
-        If the word is not found in the webpage , then prints “Webpage pageName does not contain word x”. 
-        If the webpage is not added in database, then prints “No webpage pageName found”.
+        If the word is not found in the webpage , then prints "Webpage pageName does not contain word x". 
+        If the webpage is not added in database, then prints "No webpage pageName found".
     */
 
     	word = word.toLowerCase();
@@ -213,7 +213,7 @@ public class SearchEngine implements SearchEngineInterface{
 	public void performAction(String actionMessage){
 
     // Takes an action as a string. 
-        
+
 		String delims = "[ ]+";
 		String[] tokens = actionMessage.split(delims);
 
