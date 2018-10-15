@@ -77,6 +77,9 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 	}
 
 	public Node find(T obj){
+		// Searched for the Node containing data
+		// Returns Node of the found object
+		// If not found, returns null
         Node itr = getHead();
         while(itr != null && !obj.equals(itr.getData())){
             itr = itr.getNext();
@@ -88,13 +91,13 @@ public class MyLinkedList <T> implements MyLinkedListInterface<T> {
 		// For printing out the elements of MyLinkedList
         String linkedListString= "";
         String dataString = "";
-        Node itr = head;
+        Node itr = getHead();
         while(itr != null){
-            dataString = itr.data.toString();
+            dataString = itr.getData().toString();
             if(dataString.equals("") == false){
                 linkedListString = linkedListString+", "+dataString;
             }
-            itr = itr.next;
+            itr = itr.getData();
         }
         if(linkedListString.equals("") == true){
             return linkedListString;
