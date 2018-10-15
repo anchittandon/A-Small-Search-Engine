@@ -1,21 +1,43 @@
 interface PageIndexInterface{
-	void addPositionForWord(String str, Position p);
-	MyLinkedList<WordEntry> getWordEntries();
+	public void addPositionForWord(String str, Position p);
+	public MyLinkedList<WordEntry> getWordEntries();
 }
 
 public class PageIndex{
 
-	Myset<WordEntry> currentWordEntryList;
-	PageIndex()
-    {
-        currentWordEntryList = new Myset<WordEntry>();
+	/*
+		Stores one word-entry for each unique word in the document
+	 */
+
+	Myset<WordEntry> currentWordEntrySet;
+
+	public PageIndex(){
+        currentWordEntrySet = new Myset<WordEntry>();
     }
-	void addPositionForWord(String str, Position p){
-		WordEntry node;
-		this.currentWordEntryList.Insert(node)
+
+	public void addPositionForWord(String str, Position p){
+	//  Add position p to the word-entry of str. 
+	//  If a word entry for str is already present in
+	//	the page index, then add p to the word entry. 
+	//	Otherwise, create a new word-entry for str with 
+	//	just one position entry p.
+
+		WordEntry word = new WordEntry(str);
+
+		if (currentWordEntrySet.IsMember(word)){
+			MyLinkedList<WordEntry>.Node currentNode = currentWordEntrySet.find(word);
+			currentNode.getData().addPosition(p);
+		}
+
+		else{
+			word.addPosition(p);
+			currentWordEntrySet.Insert(word);
+		}
 
 	}
-	MyLinkedList<WordEntry> getWordEntries(){
 
+	public MyLinkedList<WordEntry> getWordEntries(){
+	//	Return a list of all word entries stored in the page index.
+		return currentWordEntrySet.myset;
 	}
 }
