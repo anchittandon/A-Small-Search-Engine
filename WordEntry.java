@@ -38,10 +38,24 @@ public class WordEntry{
 	}
 
 	public float getTermFrequency(String word){
-	// To be implemented
-	// Return the term frequency of the word in a webpage
-		return 0.0f;
-	}
+	// Return the term frequency of the word in a webpage.
+		MyLinkedList<Position>.Node itr = this.getAllPositionsForThisWord().getHead();
+		float totalCount = 0;
+		float numberThis = 0;
+		PageEntry page = null;
+		while(itr!=null){
+			if(itr.getData().getPageEntry().getPageName() == word){
+				numberThis = numberThis + 1.0f;
+				page = itr.getData().getPageEntry();
+			}
+			itr = itr.getNext();
+		}
+		if(page == null){
+			return 0.0f;
+		}
+		totalCount = page.getPageIndex().getWordEntries().getSize();
+		return numberThis/totalCount;	
+}
 
 	public boolean equals(Object obj){
 	// Two WordEntry Objects are equal if they are
