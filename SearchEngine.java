@@ -3,6 +3,12 @@ import java.io.*;
 
 interface SearchEngineInterface{
 	public void performAction(String actionMessage);
+    public void performActionAddPage(String pageName) throws Exception
+    public void performActionQueryFindPagesWhichContainWord(String word);
+    public void performActionQueryFindPositionsOfWordInAPage(String word, String pageName) throws Exception;
+    public void performActionQueryFindPagesWhichContainAllWords(String str[]);
+    public void performActionQueryFindPagesWhichContainAnyOfTheseWords(String str[]);
+    public void performActionQueryFindPagesWhichContainPhrase(String str[]);
 }
 
 public class SearchEngine implements SearchEngineInterface{
@@ -210,6 +216,32 @@ public class SearchEngine implements SearchEngineInterface{
         }
     }
 
+    public void performActionQueryFindPagesWhichContainAllWords(String str[]){
+
+    /*
+        Prints the name of the webpages which contain all the words given in str. 
+        The words are separated by a space.
+    */
+   
+    }
+
+    public void performActionQueryFindPagesWhichContainAnyOfTheseWords(String str[]){
+
+    /*
+        Print the name of the webpages which contain at least one word from this
+        set str.
+    */
+     
+    }
+
+    public void performActionQueryFindPagesWhichContainPhrase(String str[]){
+    
+    /*
+        Print the name of the webpages which contain the phrase str.
+    */
+    
+    } 
+
 	public void performAction(String actionMessage){
 
     // Takes an action as a string. 
@@ -217,10 +249,10 @@ public class SearchEngine implements SearchEngineInterface{
 		String delims = "[ ]+";
 		String[] tokens = actionMessage.split(delims);
 
-        if(tokens.length==2)
-        	System.out.print(tokens[0]+" "+tokens[1]+": ");
-		else
-            System.out.print(tokens[0]+" "+tokens[1]+" "+tokens[2]+": ");
+        for(String x:tokens){
+            System.out.print(x+" ");
+        }
+        System.out.print(": ");
 
         try{
 
@@ -237,6 +269,18 @@ public class SearchEngine implements SearchEngineInterface{
 	            case "queryFindPositionsOfWordInAPage":
 	            	performActionQueryFindPositionsOfWordInAPage(tokens[1],tokens[2]);
 	                break;
+
+                case "queryFindPagesWhichContainAllWords":
+                    performActionQueryFindPagesWhichContainAllWords(tokens);
+                    break;
+
+                case "queryFindPagesWhichContainAnyOfTheseWords":
+                    performActionQueryFindPagesWhichContainAnyOfTheseWords(tokens);
+                    break;
+
+                case "queryFindPagesWhichContainPhrase":
+                    performActionQueryFindPagesWhichContainPhrase(tokens);
+                    break;
 
 	        }
 
