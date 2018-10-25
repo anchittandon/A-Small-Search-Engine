@@ -7,18 +7,22 @@ interface MySortInterface<Sortable>{
 
 public class MySort<Sortable extends Comparable<Sortable>> implements MySortInterface<Sortable>{
 
-    public MySort(){
+    //  To sort a list of Comparable objects
 
+    public MySort(){
+    // Empty Constructor
     }
 
     public ArrayList<Sortable> sortThisList( Myset<Sortable> listOfSortableEntries ) {
+    // Given a set of Sortable objects, this method returns a sorted list of objects.
         ArrayList<Sortable> list = MySet2ArrayList(listOfSortableEntries);
         mergeSort(list);
         return list;
     
     }
 
-    public ArrayList<Sortable> MySet2ArrayList(Myset<Sortable> listOfSortableEntries){
+    private ArrayList<Sortable> MySet2ArrayList(Myset<Sortable> listOfSortableEntries){
+    // Shifts elements from Myset to an ArrayList
     	MyLinkedList<Sortable> entrySet = listOfSortableEntries.myset;
         MyLinkedList<Sortable>.Node itr = entrySet.getHead();
         ArrayList <Sortable> answer = new ArrayList <Sortable>();
@@ -29,7 +33,8 @@ public class MySort<Sortable extends Comparable<Sortable>> implements MySortInte
         return answer;
     }
 
-    public void mergeSort(ArrayList<Sortable> whole) {
+    private void mergeSort(ArrayList<Sortable> whole) {
+    // Merge sort 
         ArrayList<Sortable> left = new ArrayList<Sortable>();
         ArrayList<Sortable> right = new ArrayList<Sortable>();
         int center;
@@ -59,14 +64,12 @@ public class MySort<Sortable extends Comparable<Sortable>> implements MySortInte
         return ;
     }
  
-    public void merge(ArrayList<Sortable> left, ArrayList<Sortable> right, ArrayList<Sortable> whole) {
+    private void merge(ArrayList<Sortable> left, ArrayList<Sortable> right, ArrayList<Sortable> whole) {
+    // Merge function    
         int leftIndex = 0;
         int rightIndex = 0;
         int wholeIndex = 0;
- 
-        // As long as neither the left nor the right ArrayList has
-        // been used up, keep taking the smaller of left.get(leftIndex)
-        // or right.get(rightIndex) and adding it at both.get(bothIndex).
+
         while (leftIndex < left.size() && rightIndex < right.size()) {
             if ( (left.get(leftIndex).compareTo(right.get(rightIndex))) > 0) {
                 whole.set(wholeIndex, left.get(leftIndex));
@@ -81,35 +84,17 @@ public class MySort<Sortable extends Comparable<Sortable>> implements MySortInte
         ArrayList<Sortable> rest;
         int restIndex;
         if (leftIndex >= left.size()) {
-            // The left ArrayList has been use up...
             rest = right;
             restIndex = rightIndex;
-        } else {
-            // The right ArrayList has been used up...
+        } 
+        else {
             rest = left;
             restIndex = leftIndex;
         }
- 
-        // Copy the rest of whichever ArrayList (left or right) was not used up.
         for (int i=restIndex; i<rest.size(); i++) {
             whole.set(wholeIndex, rest.get(i));
             wholeIndex++;
         }
     }
- 	public static void main(String[] args){
-        ArrayList<Integer> array = new ArrayList<Integer>();
-        // int[] arr = new int[]{1,45,67,21,12,3425,231,45,99,12,45,1,3251,564,23,1,4,12,67};
-        int[] arr = new int[]{1,2,3,4,3,4,1,5,6,4,7,8,9};
-        float[] arr1 = new float[]{(float)9.077,(float)4.207,(float)6.165};
-        int len = arr.length;
-        for(int i=0;i<len;i++){
-            array.add(arr[i]);
-        }
-        MySort<Integer> mysort = new MySort<Integer>();
-        mysort.mergeSort(array);
-        for(int i=0;i<len;i++){
-            System.out.print(array.get(i)+" ");
-        }
-        System.out.println("");
-    }
+
 }
