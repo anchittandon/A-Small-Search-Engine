@@ -4,7 +4,7 @@ interface SearchResultInterface{
     public int compareTo(SearchResult obj);
 }
 
-public class SearchResult implements Comparable<SearchResult>{
+public class SearchResult implements Comparable<SearchResult>,SearchResultInterface{
 
     private PageEntry page;
     private float relevance;
