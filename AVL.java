@@ -1,11 +1,13 @@
-interface AVLInterface<T>{
-    public int height(Node<T> N);
+import java.util.*;
+
+interface AVLInterface<T extends Comparable<T>>{
+    public int height(AVL<T>.Node N);
     public int max(int a, int b);
-    private Node<T> rightRotate(Node<T> y);
-    private Node<T> leftRotate(Node<T> x);
-    private int getBalance(Node<T> N);
-    public Node<T> insert(Node<T> node, T key);
-    public void inOrder(Node<T> node)
+    public AVL<T>.Node rightRotate(AVL<T>.Node y);
+    public AVL<T>.Node leftRotate(AVL<T>.Node x);
+    public int getBalance(AVL<T>.Node N);
+    public AVL<T>.Node insert(AVL<T>.Node node, T key);
+    public void inOrder(AVL<T>.Node node);
 }
 
 public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
@@ -14,27 +16,27 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         A height-balanced binary search tree.
     */
    
-    Node<T> root;
+    Node root;
     
-    private class Node<T>{ 
+    public class Node{ 
         int height; 
         T key;
-        Node<T> left, right; 
+        Node left, right; 
 
         Node (T d){ 
             key = d; 
             height = 1; 
         }
-        public Node<T> getLeft(){
+        public Node getLeft(){
             return left;
         }
-        public Node<T> getRight(){
+        public Node getRight(){
             return right;
         }
-        public void setLeft(Node<T> a){
+        public void setLeft(Node a){
             this.left = a;
         }
-        public void setRight(Node<T> b){
+        public void setRight(Node b){
             this.right = b;
         }
         public int getHeight(){
@@ -46,9 +48,22 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         public T getKey(){
             return key;
         } 
-    } 
+    }
 
-    public int height(Node<T> N) {
+    public AVL(){}   
+    public AVL(Node node){
+        root = node;
+    }
+
+    public Node getRoot(){
+        return root;
+    }
+
+    public void setRoot(Node N){
+        root = N;
+    }
+
+    public int height(Node N) {
     // Returns the height of a Node in the AVL Tree
         if (N == null) 
             return 0; 
@@ -59,10 +74,10 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         return (a > b) ? a : b; 
     } 
 
-    private Node<T> rightRotate(Node<T> y){
+    public Node rightRotate(Node y){
     // Right rotation of AVL Tree 
-        Node<T> x = y.getLeft(); 
-        Node<T> T2 = x.getRight(); 
+        Node x = y.getLeft(); 
+        Node T2 = x.getRight(); 
 
         x.setRight(y); 
         y.setLeft(T2); 
@@ -73,10 +88,10 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         return x; 
     } 
 
-    private Node<T> leftRotate(Node<T> x){ 
+    public Node leftRotate(Node x){ 
     // Left rotation of AVL Tree 
-        Node<T> y = x.getRight(); 
-        Node<T> T2 = y.getLeft(); 
+        Node y = x.getRight(); 
+        Node T2 = y.getLeft(); 
 
         y.setLeft(x); 
         x.setRight(T2); 
@@ -87,17 +102,17 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         return y; 
     } 
 
-    private int getBalance(Node<T> N){
+    public int getBalance(Node N){
     // Returns the Balance Factor of the AVL tree
         if (N == null) 
             return 0; 
         return height(N.getLeft()) - height(N.getRight()); 
     } 
 
-    public Node<T> insert(Node<T> node, T key){
+    public Node insert(Node node, T key){
     // Inserts an element into the AVL Tree
         if (node == null) 
-            return (new Node<T>(key)); 
+            return (new Node(key)); 
 
         if (key.compareTo(node.getKey()) < 0) 
             node.setLeft(insert(node.getLeft(), key)); 
@@ -129,7 +144,7 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         return node; 
     } 
 
-    public void inOrder(Node<T> node){
+    public void inOrder(Node node){
     // Prints the output of inorder traversal of the AVL tree
         if (node != null){ 
             inOrder(node.getLeft()); 
@@ -138,15 +153,65 @@ public class AVL<T extends Comparable<T> > implements AVLInterface<T>{
         } 
     }
 
-    public Node<T> search(T key){
+    public Node search(T key){
     // Searches AVL Tree for node containing particular data
-        if (node == null) 
+        if (root == null) 
             return null; 
-        if (key.compareTo(node.getKey()) < 0) 
-            return node.getLeft().search(key); 
-        else if (key.compareTo(node.getKey()) > 0) 
-            return node.getRight().search(key);
+        if (key.compareTo(root.getKey()) < 0){
+            Node node = root.getLeft();
+            AVL<T> leftAVL = new AVL<T>(node);
+            return leftAVL.search(key);
+        } 
+        else if (key.compareTo(root.getKey()) > 0) {
+            Node node = root.getRight();
+            AVL<T> rightAVL = new AVL<T>(node);
+            return rightAVL.search(key);
+        }
         else
-            return node;
+            return root;
+    }
+
+    public static void main(String[] args)
+    {
+        AVL<Integer> node = new AVL<Integer>();
+        Scanner in = new Scanner(System.in);
+        int response;
+        boolean exitFlag = false;
+        while(!exitFlag)
+        {
+            System.out.print("Choose - \n\t1) Insert\n\t2) Search\n\t3) Print\n\t0) Exit\n: ");
+            response = in.nextInt();
+            AVL<Integer>.Node resp = null;
+            switch(response)
+            {
+                case 1:
+                    System.out.print("Enter number to insert: ");
+                    response = in.nextInt();
+                    node.setRoot(node.insert(node.getRoot(),response));
+                    break;
+                case 2:
+                    System.out.println("Enter number to search: ");
+                    response = in.nextInt();
+                    if(node.search(response) == null)
+                    {
+                        System.out.print("Not inserted\n");
+                    }
+                    else
+                    {
+                        System.out.print("Present in tree\n");
+                    }
+                    break;
+                case 3:
+                    node.inOrder(node.getRoot());
+                    break;
+                
+                case 0:
+                    System.out.println("Exiting");
+                    exitFlag = true;
+                    break;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
+        }
     }
 }
