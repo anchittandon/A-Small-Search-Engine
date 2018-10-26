@@ -21,7 +21,7 @@ public class MySort<Sortable extends Comparable<Sortable>> implements MySortInte
     
     }
 
-    private ArrayList<Sortable> MySet2ArrayList(Myset<Sortable> listOfSortableEntries){
+    public ArrayList<Sortable> MySet2ArrayList(Myset<Sortable> listOfSortableEntries){
     // Shifts elements from Myset to an ArrayList
     	MyLinkedList<Sortable> entrySet = listOfSortableEntries.myset;
         MyLinkedList<Sortable>.Node itr = entrySet.getHead();
@@ -33,7 +33,7 @@ public class MySort<Sortable extends Comparable<Sortable>> implements MySortInte
         return answer;
     }
 
-    private void mergeSort(ArrayList<Sortable> whole) {
+    public void mergeSort(ArrayList<Sortable> whole) {
     // Merge sort 
         ArrayList<Sortable> left = new ArrayList<Sortable>();
         ArrayList<Sortable> right = new ArrayList<Sortable>();
