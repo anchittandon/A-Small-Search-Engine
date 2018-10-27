@@ -1,14 +1,8 @@
-import java.util.Scanner;
+import java.util.*;
 import java.io.*;
 
 interface SearchEngineInterface{
 	public void performAction(String actionMessage);
-    public void performActionAddPage(String pageName) throws Exception
-    public void performActionQueryFindPagesWhichContainWord(String word);
-    public void performActionQueryFindPositionsOfWordInAPage(String word, String pageName) throws Exception;
-    public void performActionQueryFindPagesWhichContainAllWords(String str[]);
-    public void performActionQueryFindPagesWhichContainAnyOfTheseWords(String str[]);
-    public void performActionQueryFindPagesWhichContainPhrase(String str[]);
 }
 
 public class SearchEngine implements SearchEngineInterface{
@@ -19,7 +13,7 @@ public class SearchEngine implements SearchEngineInterface{
    
 	private Myset<String> excludedPlurals;
 	private Myset<PageEntry> pageSet;
-	private InvertedPageIndex wordHash;
+	public static InvertedPageIndex wordHash;
     private Myset<String> connectorWordSet;
    
 	public SearchEngine(){
@@ -54,6 +48,10 @@ public class SearchEngine implements SearchEngineInterface{
 
 	}
 
+    public static InvertedPageIndex getInvertedPageIndex(){
+        return wordHash;
+    }
+
 	private PageEntry parsePage(String pageName) throws Exception {
 
     // Parses the page with name pageName into a PageEntry
@@ -67,7 +65,6 @@ public class SearchEngine implements SearchEngineInterface{
 
             br = new BufferedReader( new FileReader("./webpages/"+pageName));
             int wordPosition = 1;
-
             while((input = br.readLine())!=null){
 
                 input = input.toLowerCase();
@@ -86,10 +83,10 @@ public class SearchEngine implements SearchEngineInterface{
                         }
                         wordPosition++;
                     }
-
                 }
 
             }
+            page.setWordCount(wordPosition-1);
 
         }
 
@@ -116,7 +113,29 @@ public class SearchEngine implements SearchEngineInterface{
         return page;
     }
 
-    public void performActionAddPage(String pageName) throws Exception{
+    private Myset<SearchResult> extractPages(Myset<PageEntry> pages, String[] strings, boolean isPhrase){
+        MyLinkedList<PageEntry> pageList = pages.myset;
+        MyLinkedList<PageEntry>.Node itr = pageList.getHead();
+        Myset<SearchResult> results = new Myset<SearchResult>();
+        float rel;
+        while(itr != null){
+            rel = itr.getData().getRelevanceOfPage(strings,isPhrase);
+            try {
+                results.Insert(new SearchResult(itr.getData(),rel));
+            }
+            catch (Exception e){}
+            itr = itr.getNext();
+        }
+        return results;
+    }
+
+    private ArrayList<SearchResult> getSearchResultsFromPages(Myset<PageEntry> pages, String[] strings, boolean isPhrase){
+        Myset<SearchResult> answer = extractPages(pages,strings,isPhrase);
+        MySort<SearchResult> mysort = new MySort<SearchResult>();
+        return mysort.sortThisList(answer);
+    }
+
+    private void performActionAddPage(String pageName) throws Exception{
 
     /*
         Adds webpage pageName to the search engine database. 
@@ -132,7 +151,15 @@ public class SearchEngine implements SearchEngineInterface{
         System.out.println("Added page - \""+page+"\"");
     }
 
-    public void performActionQueryFindPagesWhichContainWord(String word){
+    private String processWord(String word){
+        word = word.toLowerCase();
+        if(this.excludedPlurals.IsMember(word)){
+            word = word.substring(0,word.length()-1);
+        }
+        return word;
+    }
+
+    private void performActionQueryFindPagesWhichContainWord(String word){
 
     /*
         Prints the name of the webpages which contain the word. 
@@ -141,7 +168,7 @@ public class SearchEngine implements SearchEngineInterface{
         "No webpage contains word"
     */
    
-    	word = word.toLowerCase();
+    	word = processWord(word);
     	Myset<PageEntry> pagesWhichContainWordSet = wordHash.getPagesWhichContainWord(word);
 
     	if(pagesWhichContainWordSet == null){
@@ -150,12 +177,14 @@ public class SearchEngine implements SearchEngineInterface{
 
         else{
             System.out.print("\""+word+"\" is present in pages - \"");
-            System.out.println(pagesWhichContainWordSet + "\"");
+            String[] strings = new String[1];
+            strings[0] = word;
+            printSortedPages(pagesWhichContainWordSet,strings);
         }
 
     }
 
-    public void performActionQueryFindPositionsOfWordInAPage(String word, String pageName) throws Exception{
+    private void performActionQueryFindPositionsOfWordInAPage(String word, String pageName) throws Exception{
 
     /*
         Prints the word indices where the word is found in the document with name pageName.
@@ -164,7 +193,7 @@ public class SearchEngine implements SearchEngineInterface{
         If the webpage is not added in database, then prints "No webpage pageName found".
     */
 
-    	word = word.toLowerCase();
+    	word = processWord(word);
     	pageName = pageName.toLowerCase();
         Myset<PageEntry> pagesOfWord = wordHash.getPagesWhichContainWord(word);
         MyLinkedList<PageEntry>.Node pageNode;
@@ -216,30 +245,61 @@ public class SearchEngine implements SearchEngineInterface{
         }
     }
 
-    public void performActionQueryFindPagesWhichContainAllWords(String str[]){
+    private String[] alignInput(String str[]){
+        String[] strings = new String[str.length-1];
+        int i=0;
+        while(i<str.length-1){
+            str[i+1] = processWord(str[i+1]);
+            strings[i] = str[i+1];
+            i++;
+        }
+        return strings;
+    }
+
+    private void printSortedPages(Myset<PageEntry> pages, String strings[]){
+        if(pages == null){
+            System.out.println("No Such Pages");
+        }
+        else{
+            ArrayList<SearchResult> sortedPages = getSearchResultsFromPages(pages,strings,false);
+            for (int i = 0; i < sortedPages.size(); i++) {
+                System.out.print(sortedPages.get(i)+" ");
+            }
+            System.out.println("");
+        }
+    }
+
+    private void performActionQueryFindPagesWhichContainAllWords(String str[]){
 
     /*
         Prints the name of the webpages which contain all the words given in str. 
         The words are separated by a space.
-    */
-   
+    */  
+        
+        String[] strings = alignInput(str);
+        Myset<PageEntry> pages = wordHash.getPagesWhichContainAllWord(strings);
+        printSortedPages(pages,strings);
     }
 
-    public void performActionQueryFindPagesWhichContainAnyOfTheseWords(String str[]){
+    private void performActionQueryFindPagesWhichContainAnyOfTheseWords(String str[]){
 
     /*
         Print the name of the webpages which contain at least one word from this
         set str.
     */
-     
+        String[] strings = alignInput(str);
+        Myset<PageEntry> pages = wordHash.getPagesWhichContainAnyWord(strings);
+        printSortedPages(pages,strings);
     }
 
-    public void performActionQueryFindPagesWhichContainPhrase(String str[]){
+    private void performActionQueryFindPagesWhichContainPhrase(String str[]){
     
     /*
         Print the name of the webpages which contain the phrase str.
     */
-    
+        String[] strings = alignInput(str);
+        Myset<PageEntry> pages = wordHash.getPagesWhichContainPhrase(strings);
+        printSortedPages(pages,strings);    
     } 
 
 	public void performAction(String actionMessage){
@@ -289,6 +349,7 @@ public class SearchEngine implements SearchEngineInterface{
 		catch (Exception e){
 			System.out.println(e.getMessage());
 		}
+        System.out.println("");
         
 	}
 }
