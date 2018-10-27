@@ -3,7 +3,7 @@ interface PositionInterface{
 	public int getWordIndex();
 }
 
-public class Position implements PositionInterface {
+public class Position implements PositionInterface, Comparable<Position> {
 
 	/*
 	 Represents a Tuple <page, word position>
@@ -37,6 +37,15 @@ public class Position implements PositionInterface {
 		boolean condition1 = this.page.equals(((Position)obj).page);
 		boolean condition2 = this.wordposition == ((Position)obj).wordposition;
         return  condition1 && condition2 ;
+    }
+
+    @Override
+    public int compareTo(Position obj){
+        return this.wordposition - obj.getWordIndex();
+    } 
+
+    public String toString(){
+    	return page+" "+wordposition;
     }
 
 }
