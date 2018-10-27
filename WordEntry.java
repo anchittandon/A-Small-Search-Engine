@@ -12,17 +12,24 @@ public class WordEntry{
 		where the word is present in the document(s).
 	*/
 
-	String word;
-	Myset<Position> positions;
+	private String word;
+	private Myset<Position> positions;
+	private AVL<Position> AVLpositions;
 
 	public WordEntry(String word){
 		this.word = word;
 		this.positions = new Myset<Position>();
+		this.AVLpositions = new AVL<Position>();
+	}
+
+	public String getWord(){
+		return this.word;
 	}
 
 	public void addPosition(Position position){
 	// Add a position entry for word.
 		this.positions.Insert(position);
+		this.AVLpositions.setRoot(this.AVLpositions.insert(AVLpositions.getRoot(),position));
 	} 
 
 	public void addPositions(MyLinkedList<Position> ps){
@@ -30,12 +37,22 @@ public class WordEntry{
 		Myset<Position> newpositions = new Myset<Position>();
 		newpositions.myset = ps;
 		this.positions = this.positions.Union(newpositions);
+
+		MyLinkedList<Position>.Node itr = ps.getHead();
+		while(itr!=null){
+		this.AVLpositions.setRoot(this.AVLpositions.insert(AVLpositions.getRoot(),itr.getData()));
+			itr = itr.getNext();
+		}
 	}
 
 	public MyLinkedList<Position> getAllPositionsForThisWord(){
 	// Returns a linked list of all position entries for the word.
 		return positions.myset;
 	}
+
+	public AVL<Position> getPositions(){
+        return AVLpositions;
+    }
 
 	public float getTermFrequency(String word){
 	// Return the term frequency of the word in a webpage.
@@ -53,7 +70,8 @@ public class WordEntry{
 		if(page == null){
 			return 0.0f;
 		}
-		totalCount = page.getPageIndex().getWordEntries().getSize();
+		totalCount = page.getWordCount();
+        // System.out.println(page+" "+this.getWord()+" "+totalCount+" "+numberThis+" "+"totalCount and numberthis");
 		return numberThis/totalCount;	
 }
 
