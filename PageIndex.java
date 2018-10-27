@@ -9,7 +9,7 @@ public class PageIndex{
 		Stores one word-entry for each unique word in the document
 	 */
 
-	Myset<WordEntry> currentWordEntrySet;
+	private Myset<WordEntry> currentWordEntrySet;
 
 	public PageIndex(){
         currentWordEntrySet = new Myset<WordEntry>();
