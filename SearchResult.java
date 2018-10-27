@@ -39,7 +39,7 @@ public class SearchResult implements Comparable<SearchResult>,SearchResultInterf
 
     public String toString(){
     // Represents the data of the search result
-    	String result = "Relevance "+relevance+" of page "+page.toString();
+    	String result = page.toString();//+" "+relevance;
         return result;
     }
 }
